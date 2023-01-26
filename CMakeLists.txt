@@ -1,25 +1,25 @@
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.16)
 
-project(BaseProject VERSION 1.0)
+project(ShoppingCart VERSION 1.0)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+find_library(EVENT_LOOP_LIB EventLoop)
+find_path(EVENT_LOOP_INCLUDES EventLoop.hpp)
 
 include_directories(include)
 
-set(INCLUDES
-    include/App.hpp)
 set(SOURCES
-    src/App.cpp)
+    src/Product.cpp
+    src/Item.cpp
+    src/Cart.cpp)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
 
 add_executable(${PROJECT_NAME} 
-    ${INCLUDES}
     ${SOURCES}
     main.cpp)
 
-# add_library(${PROJECT_NAME} SHARED
-#     ${INCLUDES}
-#     ${SOURCES})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${EVENT_LOOP_LIB})
+target_include_directories(${PROJECT_NAME} PRIVATE ${EVENT_LOOP_INCLUDES})
