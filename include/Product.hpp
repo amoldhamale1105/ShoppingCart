@@ -1,6 +1,29 @@
 #pragma once
 
+#include "ProductTypes.h"
+#include <String.hpp>
+#include <cstdint>
+
 class Product
 {
-    
+    uint32_t m_id, m_stock;
+    double m_price;
+    String m_name;
+    ProductType m_type;
+
+public:
+    Product();
+    Product(const uint32_t& id, const String& name, const double& price, const uint32_t& stock);
+    Product(const uint32_t& id, const String& name, const ProductType& type, const double& price, const uint32_t& stock);
+    virtual ~Product();
+
+    uint32_t getID() const;
+    String getName() const;
+    ProductType getType() const;
+    double getPrice() const;
+    uint32_t getStock() const;
+    bool inStock() const;
+
+    void addStock(const uint32_t& quantity);
+    void reduceStock(const uint32_t& quantity);
 };
