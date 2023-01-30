@@ -62,9 +62,9 @@ void Product::HandleReceivedEvent(Event *evt)
     if (evtName == "AddItem"){
         std::cout<<"Added "<<productInfo->second<<" units of "<<productInfo->first->getName()<<std::endl;
         EventLoop::TriggerEvent("CleanMem", productInfo);
-        EventLoop::TriggerEvent("IShop");
+        EventLoop::TriggerEvent("Shop");
     }
     else if (evtName == "RemItem"){
-        EventLoop::TriggerEvent("IShop");
+        EventLoop::TriggerEvent("Shop");
     }
 }

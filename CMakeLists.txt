@@ -17,7 +17,8 @@ set(SOURCES
     src/Product.cpp
     src/Item.cpp
     src/Cart.cpp
-    src/Inventory.cpp)
+    src/Inventory.cpp
+    src/Shell.cpp)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
