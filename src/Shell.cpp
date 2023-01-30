@@ -22,38 +22,80 @@ void Shell::getUserInput(Event *evt)
         EventLoop::TriggerEvent("Shop");
         return;
     }
-    std::string evtName = evt->getName();
+    m_commandVec = m_input.split(' ');
+    m_command = m_commandVec.front();
+    String evtName = evt->getName().c_str();
 
     if (evtName == "Shop"){
-        Vector<String> commandVec = m_input.split(' ');
-        if (!commandVec.isEmpty()){
-            String command = commandVec.front();
-            if (command == "a" || command == "add"){
-                if (m_exitFlag)
-                    m_exitFlag = false;
-                if (commandVec.size() < 3){
-                    std::cout<<"Incomplete command. Enter (h)elp for usage details"<<std::endl;
-                    EventLoop::TriggerEvent("Shop");
-                    return;
+        if (m_command == "a" || m_command == "add"){
+            if (m_exitFlag)
+                m_exitFlag = false;
+            if (m_commandVec.size() < 3){
+                std::cout<<"Incomplete command. Enter (h)elp for usage details"<<std::endl;
+                EventLoop::TriggerEvent("Shop");
+                return;
+            }
+            String productArg = m_commandVec.at(1);
+            Product* product = nullptr;
+            bool isProductIndex{true};
+            for (auto i = 0; i < productArg.length(); i++)
+            {
+                if (!std::isdigit(productArg.at(i))){
+                    isProductIndex = false;
+                    break;
                 }
-                String productArg = commandVec.at(1);
-                Product* product = nullptr;
-                bool isProductIndex{true};
-                for (auto i = 0; i < productArg.length(); i++)
-                {
-                    if (!std::isdigit(productArg.at(i))){
-                        isProductIndex = false;
-                        break;
-                    }
-                }
-                int productIndex = isProductIndex ? std::stoi(productArg.c_str()) : findProduct(productArg);
-                if (productIndex == -1 || productIndex >= m_inventory.database.size()){
-                    std::cout<<"Invalid product name/index. Given product does not exist"<<std::endl;
-                    EventLoop::TriggerEvent("Shop");
-                    return;
-                }
+            }
+            int productIndex = isProductIndex ? std::stoi(productArg.c_str()) : findProduct(productArg);
+            if (productIndex == -1 || productIndex >= m_inventory.database.size()){
+                std::cout<<"Invalid product name/index. Given product does not exist"<<std::endl;
+                EventLoop::TriggerEvent("Shop");
+                return;
+            }
 
-                String quantityArg = commandVec.at(2);
+            String quantityArg = m_commandVec.at(2);
+            bool isQuantityValid{true};
+            for (auto i = 0; i < quantityArg.length(); i++)
+            {
+                if (!std::isdigit(quantityArg.at(i))){
+                    isQuantityValid = false;
+                    break;
+                }
+            }
+            if (!isQuantityValid){
+                std::cout<<"Please provide valid numeric value for quantity. Enter (h)elp for usage details"<<std::endl;
+                EventLoop::TriggerEvent("Shop");
+                return;
+            }
+
+            EventLoop::TriggerEvent("AddItem", new Pair<Product*,int>(m_inventory.database[productIndex], std::stoi(quantityArg.c_str())));
+        }
+        else if (m_command == "r" || m_command == "remove"){
+            if (m_exitFlag)
+                m_exitFlag = false;
+            if (m_commandVec.size() < 2){
+                std::cout<<"Incomplete command. Enter (h)elp for usage details"<<std::endl;
+                EventLoop::TriggerEvent("Shop");
+                return;
+            }
+            String productArg = m_commandVec.at(1);
+            Product* product = nullptr;
+            bool isProductIndex{true};
+            for (auto i = 0; i < productArg.length(); i++)
+            {
+                if (!std::isdigit(productArg.at(i))){
+                    isProductIndex = false;
+                    break;
+                }
+            }
+            int productIndex = isProductIndex ? std::stoi(productArg.c_str()) : findProduct(productArg);
+            if (productIndex == -1 || productIndex >= m_inventory.database.size()){
+                std::cout<<"Invalid product name/index. Given product does not exist"<<std::endl;
+                EventLoop::TriggerEvent("Shop");
+                return;
+            }
+            int quantity{-1};
+            if (m_commandVec.size() > 2){
+                String quantityArg = m_commandVec.at(2);
                 bool isQuantityValid{true};
                 for (auto i = 0; i < quantityArg.length(); i++)
                 {
@@ -67,57 +109,46 @@ void Shell::getUserInput(Event *evt)
                     EventLoop::TriggerEvent("Shop");
                     return;
                 }
+                quantity = std::stoi(quantityArg.c_str());
+            }
 
-                EventLoop::TriggerEvent("AddItem", new Pair<Product*,int>(m_inventory.database[productIndex], std::stoi(quantityArg.c_str())));
-            }
-            else if (command == "h" || command == "help"){
-                usage();
-                EventLoop::TriggerEvent("Shop");
+            EventLoop::TriggerEvent("RemCart", new Pair<Product*,int>(m_inventory.database[productIndex], quantity));
+        }
+        else if (m_command == "h" || m_command == "help"){
+            usage();
+            EventLoop::TriggerEvent("Shop");
+            return;
+        }
+        else if (m_command == "e" || m_command == "exit"){
+            std::cout<<"Are you sure? Your current session and cart status will be lost"<<std::endl;
+            m_exitFlag = true;
+            EventLoop::TriggerEvent("Shop");
+            return;
+        }
+        else if (m_command == "y" || m_command == "yes"){
+            if (m_exitFlag){
+                std::cout<<"Thank you for shopping with us. See you again!"<<std::endl;
+                EventLoop::Halt();
                 return;
             }
-            else if (command == "e" || command == "exit"){
-                std::cout<<"Are you sure? Your current session and cart status will be lost"<<std::endl;
-                m_exitFlag = true;
-                EventLoop::TriggerEvent("Shop");
-                return;
+            std::cout<<"Unexpected command in current context. Enter (h)elp for usage details"<<std::endl;
+            EventLoop::TriggerEvent("Shop");
+            return;
+        }
+        else if (m_command == "n" || m_command == "no"){
+            if (m_exitFlag){
+                std::cout<<"Good call! Please continue shopping and enter (h)elp if needed"<<std::endl;
+                m_exitFlag = false;
             }
-            else if (command == "y" || command == "yes"){
-                if (m_exitFlag){
-                    std::cout<<"Thank you for shopping with us. See you again!"<<std::endl;
-                    EventLoop::Halt();
-                    return;
-                }
+            else
                 std::cout<<"Unexpected command in current context. Enter (h)elp for usage details"<<std::endl;
-                EventLoop::TriggerEvent("Shop");
-                return;
-            }
-            else if (command == "n" || command == "no"){
-                if (m_exitFlag){
-                    std::cout<<"Good call! Please continue shopping and enter (h)elp if needed"<<std::endl;
-                    m_exitFlag = false;
-                }
-                else
-                    std::cout<<"Unexpected command in current context. Enter (h)elp for usage details"<<std::endl;
-                EventLoop::TriggerEvent("Shop");
-                return;                
-            }
-            else{
-                std::cout<<"Invalid command. Enter (h)elp for usage details"<<std::endl;
-                EventLoop::TriggerEvent("Shop");
-                return;
-            }
+            EventLoop::TriggerEvent("Shop");
+            return;                
         }
         else{
-            if (m_input == "h" || m_input == "help"){
-                usage();
-                EventLoop::TriggerEvent("Shop");
-                return;
-            }
-            else{
-                std::cout<<"Invalid command. Enter (h)elp for usage details"<<std::endl;
-                EventLoop::TriggerEvent("Shop");
-                return;
-            }
+            std::cout<<"Invalid command. Enter (h)elp for usage details"<<std::endl;
+            EventLoop::TriggerEvent("Shop");
+            return;
         }
     }
     else if (evtName == "Pay"){
@@ -149,7 +180,7 @@ void Shell::usage()
 {
     std::cout<<"Commands to shop:\n\
         (a)dd <category-index | product-name> <quantity>\n\
-        (r)emove <category-index | product-name> <quantity>\n\
+        (r)emove <category-index | product-name> [quantity]\n\
         (v)iew cart\n\
         (c)heckout\nOther commands:\n\
         (h)elp\n\

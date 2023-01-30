@@ -6,7 +6,8 @@
 
 class Shell
 {
-    String m_input, m_userName;
+    Vector<String> m_commandVec;
+    String m_input, m_userName, m_command;
     Inventory m_inventory;
     bool m_exitFlag, m_paymentFlag;
 

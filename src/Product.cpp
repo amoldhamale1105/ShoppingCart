@@ -56,15 +56,25 @@ void Product::HandleReceivedEvent(Event *evt)
     Pair<Product*, int>* productInfo = static_cast<Pair<Product*, int>*>(evt->getData());
     if (m_name != productInfo->first->getName())
         return;
-
-    std::string evtName = evt->getName();
+    String evtName = evt->getName().c_str();
     
     if (evtName == "AddItem"){
-        std::cout<<"Added "<<productInfo->second<<" units of "<<productInfo->first->getName()<<std::endl;
-        EventLoop::TriggerEvent("CleanMem", productInfo);
-        EventLoop::TriggerEvent("Shop");
+        if (m_stock == 0){
+            std::cout<<"Sorry, "<<m_name<<" is currently out of stock. Please try later"<<std::endl;
+            EventLoop::TriggerEvent("CleanMem", productInfo);
+            EventLoop::TriggerEvent("Shop");
+            return;
+        }
+        if (productInfo->second > m_stock){
+            std::cout<<"Only "<<m_stock<<" out of "<<productInfo->second<<" left in stock"<<std::endl;
+            productInfo->second = m_stock;
+        }
+        m_stock -= productInfo->second;
+        EventLoop::TriggerEvent("AddCart", productInfo);
     }
     else if (evtName == "RemItem"){
+        m_stock += productInfo->second;
+        EventLoop::TriggerEvent("CleanMem", productInfo);
         EventLoop::TriggerEvent("Shop");
     }
 }
