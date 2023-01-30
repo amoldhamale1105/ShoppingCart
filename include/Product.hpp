@@ -1,7 +1,9 @@
 #pragma once
 
 #include "ProductTypes.h"
+#include <EventLoop.hpp>
 #include <String.hpp>
+#include <Pair.hpp>
 #include <cstdint>
 
 class Product
@@ -10,6 +12,8 @@ class Product
     double m_price;
     String m_name;
     ProductType m_type;
+
+    void HandleReceivedEvent(Event*);
 
 public:
     Product();
@@ -23,7 +27,4 @@ public:
     double getPrice() const;
     uint32_t getStock() const;
     bool inStock() const;
-
-    void addStock(const uint32_t& quantity);
-    void reduceStock(const uint32_t& quantity);
 };

@@ -2,8 +2,10 @@
 
 enum ProductType
 {
+    ALL,
     GROCERY,
     FRUITS,
+    VEGETABLES,
     DAIRY,
     ELECTRONICS,
     BOOKS,

@@ -32,14 +32,7 @@ namespace std {
 struct Inventory
 {
     Hashmap<String,float> giftCards;
+    Vector<Product*> database;
     Inventory();
-
-    Vector<Product> database = {
-        { 14561, "Rice", ProductType::GROCERY, 106, 27 },
-        { 14567, "Apple", ProductType::FRUITS, 45.5, 74 },
-        { 35345, "Milk", ProductType::DAIRY, 50.8, 230 },
-        { 16546, "iPhone", ProductType::ELECTRONICS, 99956.44, 16 },
-        { 12312, "Blueprint", ProductType::BOOKS, 352.52, 95 },
-        { 67657, "Chair", 2300, 15 }
-    };
+    ~Inventory();
 };
