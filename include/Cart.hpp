@@ -15,7 +15,7 @@ public:
     
     void add(Event* evt);
     void remove(Event* evt);
-    void checkout(Event* evt);
-    void view() const;
-    double getTotal();
+    void viewAndCheckout(Event* evt);
+    void view(const String& userName) const;
+    double getTotal() const;
 };

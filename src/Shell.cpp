@@ -145,6 +145,9 @@ void Shell::getUserInput(Event *evt)
             EventLoop::TriggerEvent("Shop");
             return;                
         }
+        else if (m_command == "v" || m_command == "view"){
+            EventLoop::TriggerEvent("View", &m_userName);
+        }
         else{
             std::cout<<"Invalid command. Enter (h)elp for usage details"<<std::endl;
             EventLoop::TriggerEvent("Shop");

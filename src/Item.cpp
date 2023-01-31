@@ -20,6 +20,11 @@ void Item::remove(const uint32_t &quantity)
     m_amount = m_product->getPrice()*m_quantity;
 }
 
+String Item::getName() const
+{
+    return m_product->getName();
+}
+
 uint32_t Item::getQuantity() const
 {
     return m_quantity;
