@@ -47,6 +47,7 @@ void Cart::remove(Event *evt)
     if (productInfo->second == -1){
         productInfo->second = m_cart.at(productID)->getQuantity();
         m_total -= m_cart.at(productID)->getAmount();
+        delete m_cart.at(productID);
         m_cart.erase(productID);
         std::cout<<"Removed "<<productInfo->first->getName()<<" from cart"<<std::endl;
         EventLoop::TriggerEvent("RemItem", productInfo);

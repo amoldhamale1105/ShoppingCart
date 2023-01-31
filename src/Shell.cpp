@@ -36,7 +36,6 @@ void Shell::getUserInput(Event *evt)
                 return;
             }
             String productArg = m_commandVec.at(1);
-            Product* product = nullptr;
             bool isProductIndex{true};
             for (auto i = 0; i < productArg.length(); i++)
             {
@@ -78,7 +77,6 @@ void Shell::getUserInput(Event *evt)
                 return;
             }
             String productArg = m_commandVec.at(1);
-            Product* product = nullptr;
             bool isProductIndex{true};
             for (auto i = 0; i < productArg.length(); i++)
             {
