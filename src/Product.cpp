@@ -61,7 +61,7 @@ void Product::HandleReceivedEvent(Event *evt)
     if (evtName == "AddItem"){
         if (m_stock == 0){
             std::cout<<"Sorry, "<<m_name<<" is currently out of stock. Please try later"<<std::endl;
-            EventLoop::TriggerEvent("CleanMem", productInfo);
+            EventLoop::TriggerEvent("CleanProductInfo", productInfo);
             EventLoop::TriggerEvent("Shop");
             return;
         }
@@ -74,7 +74,7 @@ void Product::HandleReceivedEvent(Event *evt)
     }
     else if (evtName == "RemItem"){
         m_stock += productInfo->second;
-        EventLoop::TriggerEvent("CleanMem", productInfo);
+        EventLoop::TriggerEvent("CleanProductInfo", productInfo);
         EventLoop::TriggerEvent("Shop");
     }
 }

@@ -3,9 +3,9 @@
 Shell::Shell(const String &user) : m_userName(user), m_exitFlag(false), m_paymentFlag(false)
 {
     EventLoop::RegisterEvents({"Shop","Pay"}, std::bind(&Shell::getUserInput, this, std::placeholders::_1));
-    EventLoop::RegisterEvent("CleanMem", std::bind(&Shell::cleanup, this, std::placeholders::_1));
+    EventLoop::RegisterEvents({"CleanProductInfo","CleanString"}, std::bind(&Shell::cleanup, this, std::placeholders::_1));
 
-    std::cout<<"---Welcome to Small Basket shopping cart shell---"<<std::endl;
+    std::cout<<"--------Welcome to Small Basket shopping cart shell--------\n"<<std::endl;
     usage();
 }
 
@@ -161,8 +161,15 @@ void Shell::getUserInput(Event *evt)
 
 void Shell::cleanup(Event *evt)
 {
-    if (evt->getData() != nullptr)
-        free(evt->getData());
+    void* payload = evt->getData();
+    if (payload != nullptr){
+        String evtName = evt->getName().c_str();
+
+        if (evtName == "CleanProductInfo")
+            delete static_cast<Pair<Product*,int>*>(payload);
+        else if (evtName == "CleanString")
+            delete static_cast<String*>(payload);
+    }
 }
 
 int Shell::findProduct(const String &name)

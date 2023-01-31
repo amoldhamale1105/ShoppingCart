@@ -29,7 +29,7 @@ void Cart::add(Event *evt)
     m_cart.at(productID)->add(productInfo->second);
     m_total += (m_cart.at(productID)->getAmount() - prevItemAmt);
     std::cout<<"Added "<<productInfo->second<<" units of "<<productInfo->first->getName()<<" to cart"<<std::endl;
-    EventLoop::TriggerEvent("CleanMem", productInfo);
+    EventLoop::TriggerEvent("CleanProductInfo", productInfo);
     EventLoop::TriggerEvent("Shop");
 }
 
@@ -40,7 +40,7 @@ void Cart::remove(Event *evt)
 
     if (!m_cart.contains(productID)){
         std::cout<<productInfo->first->getName()<<" not present in cart"<<std::endl;
-        EventLoop::TriggerEvent("CleanMem", productInfo);
+        EventLoop::TriggerEvent("CleanProductInfo", productInfo);
         EventLoop::TriggerEvent("Shop");
         return;
     }
