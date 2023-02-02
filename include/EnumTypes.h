@@ -12,3 +12,9 @@ enum ProductType
     MISC = 254,
     INVALID
 };
+
+enum PaymentMode
+{
+    CASH,
+    ONLINE
+};

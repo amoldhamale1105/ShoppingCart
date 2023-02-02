@@ -1,11 +1,12 @@
 #include "Cart.hpp"
 #include <iomanip>
 
-Cart::Cart() : m_total(0)
+Cart::Cart() : m_total(0), m_billTotal(m_total)
 {
     EventLoop::RegisterEvent("AddCart", std::bind(&Cart::add, this, std::placeholders::_1));
     EventLoop::RegisterEvent("RemCart", std::bind(&Cart::remove, this, std::placeholders::_1));
-    EventLoop::RegisterEvents({"View","Checkout"}, std::bind(&Cart::viewAndCheckout, this, std::placeholders::_1));
+    EventLoop::RegisterEvents({"View","Checkout","CartPay"}, std::bind(&Cart::cartActions, this, std::placeholders::_1));
+    EventLoop::RegisterEvent("Discount", std::bind(&Cart::applyDiscount, this, std::placeholders::_1));
 }
 
 Cart::~Cart()
@@ -35,6 +36,18 @@ void Cart::add(Event *evt)
 
 void Cart::remove(Event *evt)
 {
+    if (evt->getData() == nullptr){
+        if (m_cart.isEmpty())
+            std::cout<<"Cart is already empty"<<std::endl;
+        else{
+            m_total = 0;
+            m_cart.clear();
+            std::cout<<"Cart emptied. Please continue shopping or enter (h)elp for usage details"<<std::endl;
+        }
+        EventLoop::TriggerEvent("Shop");
+        return;
+    }
+
     Pair<Product*, int>* productInfo = static_cast<Pair<Product*, int>*>(evt->getData());
     uint32_t productID = productInfo->first->getID();
 
@@ -70,17 +83,110 @@ void Cart::remove(Event *evt)
     EventLoop::TriggerEvent("RemItem", productInfo);
 }
 
-void Cart::viewAndCheckout(Event *evt)
+void Cart::cartActions(Event *evt)
 {
     String evtName = evt->getName().c_str();
-    String* userName = static_cast<String*>(evt->getData());
 
     if (evtName == "View"){
+        String* userName = static_cast<String*>(evt->getData());
         if (m_cart.isEmpty())
             std::cout<<"Cart is empty. Enter (h)elp for usage details"<<std::endl;
         else
             view(*userName);
         EventLoop::TriggerEvent("Shop");
+    }
+    else if (evtName == "Checkout"){
+        String* userName = static_cast<String*>(evt->getData());
+        if (m_cart.isEmpty()){
+            std::cout<<"Failed to checkout. Proceed to add items to cart first"<<std::endl;
+            EventLoop::TriggerEvent("Shop");
+            return;
+        }
+        m_billTotal = m_total;
+        m_usedCoupons.clear();
+        view(*userName);
+        std::cout<<"\n#### Total amount payable: "<<m_billTotal<<" ####"<<std::endl;
+        EventLoop::TriggerEvent("Pay");
+    }
+    else if (evtName == "CartPay"){
+        Pair<PaymentMode,double>* paymentData = static_cast<Pair<PaymentMode,double>*>(evt->getData());
+        if (paymentData->second == -1)
+            paymentData->second = m_billTotal;
+        switch (paymentData->first)
+        {
+        case PaymentMode::CASH:
+        {
+            double diff = std::abs(m_billTotal - paymentData->second);
+            if (paymentData->second >= m_billTotal){
+                std::cout<<"Thank you! Your change after paying "<<std::fixed<<std::setprecision(2)<<paymentData->second<<" in cash: "<<diff<<std::endl;
+                std::cout<<"Your order will be delivered soon. Please continue shopping"<<std::endl;
+                m_total = 0;
+                m_cart.clear();
+                EventLoop::TriggerEvent("Shop");
+            }
+            else{
+                m_billTotal -= paymentData->second;
+                std::cout<<"Thank you for the payment. Remaining amount payable: "<<m_billTotal<<std::endl;
+                EventLoop::TriggerEvent("Pay");
+            }
+            break;
+        }
+        case PaymentMode::ONLINE:
+            if (paymentData->second > m_billTotal)
+                paymentData->second = m_billTotal;
+            m_billTotal -= paymentData->second;
+            std::cout<<"Thank you! INR "<<std::fixed<<std::setprecision(2)<<paymentData->second<<" will be deducted from your SB wallet"<<std::endl;
+            if (m_billTotal > 0){
+                std::cout<<"Remaining amount payable: "<<m_billTotal;
+                EventLoop::TriggerEvent("Pay");
+            }
+            else{
+                std::cout<<"Your order will be delivered soon. Please continue shopping"<<std::endl;
+                m_total = 0;
+                m_cart.clear();
+                EventLoop::TriggerEvent("Shop");
+            }
+        default:
+            break;
+        }
+    }
+}
+
+void Cart::applyDiscount(Event *evt)
+{
+    String evtName = evt->getName().c_str();
+    if (evtName == "Discount"){
+        Pair<std::string, float>* discountData = static_cast<Pair<std::string,float>*>(evt->getData());
+        ProductType type = ProductType::ALL;
+        if (m_usedCoupons.position(discountData->first) != -1){
+            std::cout<<"This coupon has already been applied. Try another or proceed to payment"<<std::endl;
+            EventLoop::TriggerEvent("Pay");
+            return;
+        }
+        if (std::isdigit(discountData->first.at(0)) && std::isdigit(discountData->first.at(1))){
+            char catStr[3];
+            strncpy(catStr, discountData->first.c_str(), 2); 
+            catStr[2] = '\0';
+            type = static_cast<ProductType>(std::stoi(catStr));
+        }
+        double discountAmt{0};
+        if (type != ProductType::ALL){
+            Vector<uint32_t> ids = m_cart.keys();
+            for(auto i = 0; i < ids.size(); i++)
+            {
+                Item* item = m_cart.at(ids.at(i));
+                if (item->getType() == type){
+                    discountAmt += (item->getAmount() * discountData->second/100);
+                }
+            }
+        }
+        else
+            discountAmt = m_billTotal * discountData->second/100;
+        
+        m_billTotal -= discountAmt;
+        m_usedCoupons.push_back(discountData->first);
+        std::cout<<"Coupon applied successfully. Amount payable after applying discount: "<<m_billTotal<<std::endl;
+        EventLoop::TriggerEvent("Pay");
     }
 }
 

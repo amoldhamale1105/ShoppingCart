@@ -25,6 +25,11 @@ String Item::getName() const
     return m_product->getName();
 }
 
+ProductType Item::getType() const
+{
+    return m_product->getType();
+}
+
 uint32_t Item::getQuantity() const
 {
     return m_quantity;

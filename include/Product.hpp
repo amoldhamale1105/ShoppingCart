@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ProductTypes.h"
+#include "EnumTypes.h"
 #include <EventLoop.hpp>
 #include <String.hpp>
 #include <Pair.hpp>
@@ -13,7 +13,7 @@ class Product
     String m_name;
     ProductType m_type;
 
-    void HandleReceivedEvent(Event*);
+    void manageProduct(Event*);
 
 public:
     Product();
@@ -25,6 +25,4 @@ public:
     String getName() const;
     ProductType getType() const;
     double getPrice() const;
-    uint32_t getStock() const;
-    bool inStock() const;
 };

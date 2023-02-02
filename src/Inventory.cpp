@@ -7,8 +7,10 @@ bool operator==(const String &str1, const String &str2)
 
 Inventory::Inventory()
 {
-    giftCards.insert("DIWALITYUPJK", 32.5);
-    giftCards.insert("XMASTO5FG754", 25.2);
+    coupons.insert("DIWALITYUPJK", 32.5);
+    coupons.insert("GINDFESTPPYD", 55);
+    coupons.insert("05XMASYPJTY4", 14);
+    coupons.insert("01PADWAQXV6L", 40);
 
     database.push_back(new Product(14561, "Rice", ProductType::GROCERY, 106, 27));
     database.push_back(new Product(14567, "Apple", ProductType::FRUITS, 45.5, 74));

@@ -9,7 +9,7 @@ class Shell
     Vector<String> m_commandVec;
     String m_input, m_userName, m_command;
     Inventory m_inventory;
-    bool m_exitFlag, m_paymentFlag;
+    bool m_exitFlag, m_emptyCart;
 
     void getUserInput(Event* evt);
     void cleanup(Event* evt);
