@@ -225,7 +225,7 @@ void Shell::getUserInput(Event *evt)
                     }
                 }
                 if (!isAmtValid){
-                    std::cout<<"Please provide valid numeric value for amount to be paid. Enter (h)elp for usage details"<<std::endl;
+                    std::cout<<"Please provide valid numeric value for amount. Enter (h)elp for usage details"<<std::endl;
                     EventLoop::TriggerEvent("Pay");
                     return;
                 }

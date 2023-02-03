@@ -137,7 +137,7 @@ void Cart::cartActions(Event *evt)
             m_billTotal -= paymentData->second;
             std::cout<<"Thank you! INR "<<std::fixed<<std::setprecision(2)<<paymentData->second<<" will be deducted from your SB wallet"<<std::endl;
             if (m_billTotal > 0){
-                std::cout<<"Remaining amount payable: "<<m_billTotal;
+                std::cout<<"Remaining amount payable: "<<m_billTotal<<std::endl;
                 EventLoop::TriggerEvent("Pay");
             }
             else{
