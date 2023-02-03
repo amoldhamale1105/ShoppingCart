@@ -176,9 +176,9 @@ void Shell::getUserInput(Event *evt)
                 EventLoop::TriggerEvent("Pay");
                 return;
             }
-            std::string couponCode = m_commandVec.at(1).c_str();
+            String couponCode = m_commandVec.at(1);
             if (m_inventory.coupons.contains(couponCode)){
-                EventLoop::TriggerEvent("Discount", new Pair<std::string,float>(couponCode, m_inventory.coupons.at(couponCode)));
+                EventLoop::TriggerEvent("Discount", new Pair<String,float>(couponCode, m_inventory.coupons.at(couponCode)));
                 return;
             }
             std::cout<<"Invalid coupon code. Please try again or enter (n)o to proceed to payment"<<std::endl;

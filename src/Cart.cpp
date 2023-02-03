@@ -156,7 +156,7 @@ void Cart::applyDiscount(Event *evt)
 {
     String evtName = evt->getName().c_str();
     if (evtName == "Discount"){
-        Pair<std::string, float>* discountData = static_cast<Pair<std::string,float>*>(evt->getData());
+        Pair<String, float>* discountData = static_cast<Pair<String,float>*>(evt->getData());
         ProductType type = ProductType::ALL;
         if (m_usedCoupons.position(discountData->first) != -1){
             std::cout<<"This coupon has already been applied. Try another or proceed to payment"<<std::endl;

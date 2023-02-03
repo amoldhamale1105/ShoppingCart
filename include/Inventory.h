@@ -31,7 +31,7 @@ namespace std {
 
 struct Inventory
 {
-    Hashmap<std::string,float> coupons;
+    Hashmap<String,float> coupons;
     Vector<Product*> database;
     Inventory();
     ~Inventory();

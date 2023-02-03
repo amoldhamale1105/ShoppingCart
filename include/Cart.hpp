@@ -9,7 +9,7 @@ class Cart
 {
     double m_total, m_billTotal;
     Hashmap<uint32_t, Item*> m_cart;
-    List<std::string> m_usedCoupons;
+    List<String> m_usedCoupons;
 
     void view(const String& userName) const;
 
