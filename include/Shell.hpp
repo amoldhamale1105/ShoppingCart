@@ -14,6 +14,7 @@ class Shell
     void getUserInput(Event* evt);
     void cleanup(Event* evt);
     int findProduct(const String& name);
+    Product* getProduct(const int& index);
     void usage();
 
 public:

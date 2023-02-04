@@ -45,7 +45,8 @@ void Shell::getUserInput(Event *evt)
                 }
             }
             int productIndex = isProductIndex ? std::stoi(productArg.c_str()) : findProduct(productArg);
-            if (productIndex == -1 || productIndex >= m_inventory.database.size()){
+            Product* reqProduct = getProduct(productIndex);
+            if (reqProduct == nullptr){
                 std::cout<<"Invalid product name/index. Given product does not exist"<<std::endl;
                 EventLoop::TriggerEvent("Shop");
                 return;
@@ -66,7 +67,7 @@ void Shell::getUserInput(Event *evt)
                 return;
             }
 
-            EventLoop::TriggerEvent("AddItem", new Pair<Product*,int>(m_inventory.database[productIndex], std::stoi(quantityArg.c_str())));
+            EventLoop::TriggerEvent("AddItem", new Pair<Product*,int>(reqProduct, std::stoi(quantityArg.c_str())));
         }
         else if (m_command == "r" || m_command == "remove"){
             if (m_exitFlag)
@@ -86,7 +87,8 @@ void Shell::getUserInput(Event *evt)
                 }
             }
             int productIndex = isProductIndex ? std::stoi(productArg.c_str()) : findProduct(productArg);
-            if (productIndex == -1 || productIndex >= m_inventory.database.size()){
+            Product* reqProduct = getProduct(productIndex);
+            if (reqProduct == nullptr){
                 std::cout<<"Invalid product name/index. Given product does not exist"<<std::endl;
                 EventLoop::TriggerEvent("Shop");
                 return;
@@ -110,7 +112,7 @@ void Shell::getUserInput(Event *evt)
                 quantity = std::stoi(quantityArg.c_str());
             }
 
-            EventLoop::TriggerEvent("RemCart", new Pair<Product*,int>(m_inventory.database[productIndex], quantity));
+            EventLoop::TriggerEvent("RemCart", new Pair<Product*,int>(reqProduct, quantity));
         }
         else if (m_command == "u" || m_command == "unload"){
             std::cout<<"Are you sure? All items added in the cart will be removed"<<std::endl;
@@ -293,15 +295,34 @@ void Shell::cleanup(Event *evt)
 int Shell::findProduct(const String &name)
 {
     int targetIndex{-1};
-    int totalItems = m_inventory.database.size();
-    for(auto i = 0; i < totalItems; i++)
+    int totalCategories = m_inventory.database.size();
+    int totalItems = m_inventory.database.at(0).size();
+    
+    for(auto i = 0; i < totalCategories; i++)
     {
-        if (strcasecmp(m_inventory.database.at(i)->getName().c_str(), name.c_str()) == 0){
-            targetIndex = i;
-            break;
+        for(auto j = 0; j < totalItems; j++)
+        {
+            if (strcasecmp(m_inventory.database.at(i).at(j)->getName().c_str(), name.c_str()) == 0){
+                targetIndex = (i+1)*10 + j+1;
+                break;
+            }
         }
     }
     return targetIndex;
+}
+
+Product *Shell::getProduct(const int &index)
+{
+    Product* product{nullptr};
+    int catIndex = index/10 - 1;
+    int productIndex = index%10 - 1;
+
+    if (catIndex >= 0 && productIndex >= 0 &&
+        catIndex <= m_inventory.database.size() && 
+        productIndex <= m_inventory.database.at(0).size())
+        product = m_inventory.database.at(catIndex).at(productIndex);
+
+    return product;
 }
 
 void Shell::usage()

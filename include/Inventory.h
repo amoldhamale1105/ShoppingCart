@@ -32,7 +32,7 @@ namespace std {
 struct Inventory
 {
     Hashmap<String,float> coupons;
-    Vector<Product*> database;
+    Vector<Vector<Product*>> database;
     Inventory();
     ~Inventory();
 };
