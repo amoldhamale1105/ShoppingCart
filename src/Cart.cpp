@@ -40,8 +40,7 @@ void Cart::remove(Event *evt)
         if (m_cart.isEmpty())
             std::cout<<"Cart is already empty"<<std::endl;
         else{
-            m_total = 0;
-            m_cart.clear();
+            emptyCart();
             std::cout<<"Cart emptied. Please continue shopping or enter (h)elp for usage details"<<std::endl;
         }
         EventLoop::TriggerEvent("Shop");
@@ -120,13 +119,14 @@ void Cart::cartActions(Event *evt)
             if (paymentData->second >= m_billTotal){
                 std::cout<<"Thank you! Your change after paying "<<std::fixed<<std::setprecision(2)<<paymentData->second<<" in cash: "<<diff<<std::endl;
                 std::cout<<"Your order will be delivered soon. Please continue shopping"<<std::endl;
-                m_total = 0;
-                m_cart.clear();
+                emptyCart();
+                EventLoop::TriggerEvent("CleanPaymentData", paymentData);
                 EventLoop::TriggerEvent("Shop");
             }
             else{
                 m_billTotal -= paymentData->second;
-                std::cout<<"Thank you for the payment. Remaining amount payable: "<<m_billTotal<<std::endl;
+                std::cout<<"Thank you for the cash payment. Remaining amount payable: "<<m_billTotal<<std::endl;
+                EventLoop::TriggerEvent("CleanPaymentData", paymentData);
                 EventLoop::TriggerEvent("Pay");
             }
             break;
@@ -138,12 +138,13 @@ void Cart::cartActions(Event *evt)
             std::cout<<"Thank you! INR "<<std::fixed<<std::setprecision(2)<<paymentData->second<<" will be deducted from your SB wallet"<<std::endl;
             if (m_billTotal > 0){
                 std::cout<<"Remaining amount payable: "<<m_billTotal<<std::endl;
+                EventLoop::TriggerEvent("CleanPaymentData", paymentData);
                 EventLoop::TriggerEvent("Pay");
             }
             else{
                 std::cout<<"Your order will be delivered soon. Please continue shopping"<<std::endl;
-                m_total = 0;
-                m_cart.clear();
+                emptyCart();
+                EventLoop::TriggerEvent("CleanPaymentData", paymentData);
                 EventLoop::TriggerEvent("Shop");
             }
         default:
@@ -160,6 +161,7 @@ void Cart::applyDiscount(Event *evt)
         ProductType type = ProductType::ALL;
         if (m_usedCoupons.position(discountData->first) != -1){
             std::cout<<"This coupon has already been applied. Try another or proceed to payment"<<std::endl;
+            EventLoop::TriggerEvent("CleanCouponInfo", discountData);
             EventLoop::TriggerEvent("Pay");
             return;
         }
@@ -186,6 +188,7 @@ void Cart::applyDiscount(Event *evt)
         m_billTotal -= discountAmt;
         m_usedCoupons.push_back(discountData->first);
         std::cout<<"Coupon applied successfully. Amount payable after applying discount: "<<m_billTotal<<std::endl;
+        EventLoop::TriggerEvent("CleanCouponInfo", discountData);
         EventLoop::TriggerEvent("Pay");
     }
 }
@@ -215,6 +218,19 @@ void Cart::view(const String& userName) const
         std::cout<<"-";
     }
     std::cout<<std::endl<<std::setw(40)<<std::left<<"TOTAL"<<std::setw(12)<<std::right<<m_total<<std::endl;
+}
+
+void Cart::emptyCart()
+{
+    Vector<uint32_t> ids = m_cart.keys();
+    int totalItems = ids.size();
+
+    for(auto i = 0; i < totalItems; i++)
+    {
+        delete m_cart.at(ids.at(i));
+    }
+    m_total = 0;
+    m_cart.clear();
 }
 
 double Cart::getTotal() const

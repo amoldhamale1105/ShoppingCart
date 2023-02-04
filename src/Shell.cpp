@@ -3,7 +3,7 @@
 Shell::Shell(const String &user) : m_userName(user), m_exitFlag(false), m_emptyCart(false)
 {
     EventLoop::RegisterEvents({"Shop","Pay"}, std::bind(&Shell::getUserInput, this, std::placeholders::_1));
-    EventLoop::RegisterEvents({"CleanProductInfo","CleanString"}, std::bind(&Shell::cleanup, this, std::placeholders::_1));
+    EventLoop::RegisterEvents({"CleanProductInfo","CleanCouponInfo","CleanPaymentData"}, std::bind(&Shell::cleanup, this, std::placeholders::_1));
 
     std::cout<<"--------Welcome to Small Basket shopping cart shell--------\n"<<std::endl;
     usage();
@@ -15,7 +15,7 @@ Shell::~Shell()
 
 void Shell::getUserInput(Event *evt)
 {
-    std::cout<<m_userName<<"@SmallBasket:$ ";
+    std::cout<<m_userName<<"@SmallBasket:~# ";
     std::cin >> m_input;
     m_input.trim();
     if (m_input.empty()){
@@ -283,8 +283,10 @@ void Shell::cleanup(Event *evt)
 
         if (evtName == "CleanProductInfo")
             delete static_cast<Pair<Product*,int>*>(payload);
-        else if (evtName == "CleanString")
-            delete static_cast<String*>(payload);
+        else if (evtName == "CleanCouponInfo")
+            delete static_cast<Pair<String,float>*>(payload);
+        else if (evtName == "CleanPaymentData")
+            delete static_cast<Pair<PaymentMode,double>*>(payload);
     }
 }
 

@@ -12,6 +12,7 @@ class Cart
     List<String> m_usedCoupons;
 
     void view(const String& userName) const;
+    void emptyCart();
 
 public:
     Cart();
