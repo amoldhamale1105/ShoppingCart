@@ -2,9 +2,7 @@
 
 bool operator==(const String &str1, const String &str2)
 {
-    std::string stdStr1 = str1.c_str();
-    std::string stdStr2 = str2.c_str();
-    return stdStr1 == stdStr2;
+    return str1.length() == str2.length() && strncmp(str1.c_str(), str2.c_str(), str1.length()) == 0;
 }
 
 Inventory::Inventory()
