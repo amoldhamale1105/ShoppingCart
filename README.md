@@ -27,13 +27,15 @@ Run the shopping cart app with the following command, optionally with a program 
 ```
 ./bin/ShoppingCart Tony
 ```
-The following shell will be commenced for the current customer. The shell will be preceeded with the manual on using the shell for shopping. This manual can be invoked with the following command in the cart shell
+The following shell will be commenced for the current customer. The shell will be preceeded with a manual on using the shell for shopping. This manual can be invoked with the following command in the cart shell
 ```
 h
 ```
+![image](https://user-images.githubusercontent.com/78597991/216771735-5bb5733a-59b8-4ed1-961c-fc11fea559c1.png)
+
 As an example, a product can be added and removed from the cart as follows,  
 Form a whole number using the category and item index, use it with the `add` or `a` command followed by quantity  
-To start shopping, Tony might want to add 4 units of oats, 3 units of milk to his cart and 7 units of mango  
+To start shopping, Tony might want to add 4 units of oats, 3 units of milk and 7 units of mango to his cart  
 Oats `Item-Index = 3` lies in Groceries category `Category-Index = 1`. Thus `category-index` value of the add command will be `13`  
 Milk `Item-Index = 1` lies in Groceries category `Category-Index = 4`. Thus `category-index` value of the add command will be `41`  
 Mango `Item-Index = 4` lies in Groceries category `Category-Index = 2`. Thus `category-index` value of the add command will be `24`  
@@ -67,9 +69,11 @@ His shopping session is successful but not over. Now he can either continue shop
 e
 y
 ```
-The above commands depict the short-hand version of the original commands. Short-hand enables quick shopping and checkout procedure with less time spent in actually writing the full commands. Run the help command mentioned above to get the list of all commands
+The above commands depict the short-hand version of the original commands. Short-hand enables quick shopping and checkout experience with less time spent in actually typing the full commands. Run the help command mentioned above to get the list of all commands
+
+![image](https://user-images.githubusercontent.com/78597991/216771652-553531a2-5d24-4dcd-a9c0-a7870fd389fe.png)
 
 ## Contribution
-This project is mainly a dogfooding ambition to prove usage of my custom built data structures and event loop (links mentioned in the intro above). It also helped me to uncover a few bugs in custom data structures as well as the event loop implementation. This project will also serve as an example for how to use my custom built data structures and event loop in your own projects and should give you an idea of how they work  
-With that premise, you can review the code in this repository as well as from the data structures and event loop repo. I am open to improvements in the software as well as the architecture if it offers the expected functionality in a better way. I have tested the app extensively and also run leak checks with `valgrind`. However, often bugs slip through and unoptimized code gets overlooked which is why I would like you to review, test and make improvements through pull requests and issues.  
+This project is mainly a dogfooding ambition to prove utility of my custom built data structures and event loop library (links mentioned in the intro above). It also helped me to uncover a few bugs in those dependency projects. This project will also serve as an example for how to use my custom built data structures and event loop in your own projects and to give you an idea of how they work  
+With that premise, you can review the code in this repository as well as from the data structures and event loop repo. I am open to improvements in the software as well as the architecture if it offers the expected functionality in a better way. I have tested the app extensively and also run leak checks with `valgrind`. However, often bugs slip through and unoptimized code gets overlooked. Therefore, I would like you to review, test and consequently raise pull requests or create issues if required.  
 Please contact me in case of any questions or suggestions amoldhamale1105@gmail.com
