@@ -181,6 +181,12 @@ void Cart::applyDiscount(Event *evt)
                     discountAmt += (item->getAmount() * discountData->second/100);
                 }
             }
+            if (discountAmt == 0){
+                std::cout<<"Failed to apply coupon to existing items in cart. Try another or proceed to payment"<<std::endl;
+                EventLoop::TriggerEvent("CleanCouponInfo", discountData);
+                EventLoop::TriggerEvent("Pay");
+                return;
+            }
         }
         else
             discountAmt = m_billTotal * discountData->second/100;

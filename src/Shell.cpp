@@ -66,8 +66,14 @@ void Shell::getUserInput(Event *evt)
                 EventLoop::TriggerEvent("Shop");
                 return;
             }
+            int quantity = std::stoi(quantityArg.c_str());
+            if (quantity == 0){
+                std::cout<<"Please provide an integral non-zero value for quantity"<<std::endl;
+                EventLoop::TriggerEvent("Shop");
+                return;
+            }
 
-            EventLoop::TriggerEvent("AddItem", new Pair<Product*,int>(reqProduct, std::stoi(quantityArg.c_str())));
+            EventLoop::TriggerEvent("AddItem", new Pair<Product*,int>(reqProduct, quantity));
         }
         else if (m_command == "r" || m_command == "remove"){
             if (m_exitFlag)
@@ -110,6 +116,11 @@ void Shell::getUserInput(Event *evt)
                     return;
                 }
                 quantity = std::stoi(quantityArg.c_str());
+                if (quantity == 0){
+                    std::cout<<"Please provide an integral non-zero value for quantity"<<std::endl;
+                    EventLoop::TriggerEvent("Shop");
+                    return;
+                }
             }
 
             EventLoop::TriggerEvent("RemCart", new Pair<Product*,int>(reqProduct, quantity));
