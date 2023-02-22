@@ -44,6 +44,13 @@ void Shell::getUserInput(Event *evt)
                     break;
                 }
             }
+            if (!isProductIndex){
+                int argIndex{2};
+                while (argIndex < m_commandVec.size()-1)
+                {
+                    productArg += m_commandVec.at(argIndex++);
+                }
+            }
             int productIndex = isProductIndex ? std::stoi(productArg.c_str()) : findProduct(productArg);
             Product* reqProduct = getProduct(productIndex);
             if (reqProduct == nullptr){
@@ -52,7 +59,7 @@ void Shell::getUserInput(Event *evt)
                 return;
             }
 
-            String quantityArg = m_commandVec.at(2);
+            String quantityArg = m_commandVec.back();
             bool isQuantityValid{true};
             for (auto i = 0; i < quantityArg.length(); i++)
             {
@@ -92,6 +99,24 @@ void Shell::getUserInput(Event *evt)
                     break;
                 }
             }
+            /* Check if last optional arg is valid quantity before searching product name */
+            String quantityArg = m_commandVec.back();
+            bool isQuantityValid{true};
+            for (auto i = 0; i < quantityArg.length(); i++)
+            {
+                if (!std::isdigit(quantityArg.at(i))){
+                    isQuantityValid = false;
+                    break;
+                }
+            }
+            if (!isProductIndex){
+                int argIndex{2};
+                int lastPos = isQuantityValid ? m_commandVec.size()-1 : m_commandVec.size();
+                while (argIndex < lastPos)
+                {
+                    productArg += m_commandVec.at(argIndex++);
+                }
+            }
             int productIndex = isProductIndex ? std::stoi(productArg.c_str()) : findProduct(productArg);
             Product* reqProduct = getProduct(productIndex);
             if (reqProduct == nullptr){
@@ -100,21 +125,7 @@ void Shell::getUserInput(Event *evt)
                 return;
             }
             int quantity{-1};
-            if (m_commandVec.size() > 2){
-                String quantityArg = m_commandVec.at(2);
-                bool isQuantityValid{true};
-                for (auto i = 0; i < quantityArg.length(); i++)
-                {
-                    if (!std::isdigit(quantityArg.at(i))){
-                        isQuantityValid = false;
-                        break;
-                    }
-                }
-                if (!isQuantityValid){
-                    std::cout<<"Please provide valid numeric value for quantity. Enter (h)elp for usage details"<<std::endl;
-                    EventLoop::TriggerEvent("Shop");
-                    return;
-                }
+            if (isQuantityValid){
                 quantity = std::stoi(quantityArg.c_str());
                 if (quantity == 0){
                     std::cout<<"Please provide an integral non-zero value for quantity"<<std::endl;
@@ -313,7 +324,9 @@ int Shell::findProduct(const String &name)
     {
         for(auto j = 0; j < totalItems; j++)
         {
-            if (strcasecmp(m_inventory.database.at(i).at(j)->getName().c_str(), name.c_str()) == 0){
+            String dbName = m_inventory.database.at(i).at(j)->getName();
+            dbName.trim(' ', true, true, true);
+            if (strcasecmp(dbName.c_str(), name.c_str()) == 0){
                 targetIndex = (i+1)*10 + j+1;
                 break;
             }

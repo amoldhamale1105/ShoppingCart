@@ -72,11 +72,11 @@ void Cart::remove(Event *evt)
     }
     double prevItemAmt = m_cart.at(productID)->getAmount();
     m_cart.at(productID)->remove(productInfo->second);
+    m_total -= (prevItemAmt - m_cart.at(productID)->getAmount());
     if (m_cart.at(productID)->getQuantity() == 0){
         delete m_cart.at(productID);
         m_cart.erase(productID);
     }
-    m_total -= (prevItemAmt - m_cart.at(productID)->getAmount());
     std::cout<<"Removed "<<productInfo->second<<" units of "<<productInfo->first->getName()<<" from cart"<<std::endl;
 
     EventLoop::TriggerEvent("RemItem", productInfo);
