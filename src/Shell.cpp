@@ -273,7 +273,7 @@ void Shell::getUserInput(Event *evt)
         }
         else if (m_command == "n" || m_command == "no"){
             if (m_exitFlag){
-                std::cout<<"Great. Please proceed with checkout or return to shopping with (s)top command"<<std::endl;
+                std::cout<<"Great. Please proceed with paymemnt or return to shopping with (s)top command"<<std::endl;
                 m_exitFlag = false;
             }
             else
