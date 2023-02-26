@@ -8,6 +8,13 @@ The app can be built using the `build.sh` script in the project source tree. It 
 ```
 ./build.sh -h
 ```
+The app depends on external libraries and headers. The build script is equipped to accept the path to those dependencies in order to build the project. The following steps can be followed to resolve dependencies
+- Clone or download and unzip https://github.com/amoldhamale1105/CustomDataStructures and https://github.com/amoldhamale1105/EventLoop
+- Follow the build instructions under each project readme to generate dependent artifacts
+- Run the build script of this project with the `-p` option and argument as comma separated list of paths (absolute or relative) to dependencies. For example, if you clone the above 2 projects at the same level as this project, the build script can be executed as follows with relative paths to the root of dependency projects:
+```
+./build.sh -p ../EventLoop/,../CustomDataStructures
+```
 Build artifacts will be generated in the `build` directory  
 Output artifact will be present in the `bin` directory as `ShoppingCart` binary
 
