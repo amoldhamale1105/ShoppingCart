@@ -1,4 +1,5 @@
 #include "Shell.hpp"
+#include <Event.hpp>
 
 Shell::Shell(const String &user) : m_userName(user), m_exitFlag(false), m_emptyCart(false)
 {

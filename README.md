@@ -8,6 +8,8 @@ The app can be built using the `build.sh` script in the project source tree. It 
 ```
 ./build.sh -h
 ```
+**Note:** The following steps to build are not ideal since the app does not depend on all the headers of *EventLoop* and *CustomDataStructures* projects. A better way to structure the build system would be to download the required headers and libraries in any location without having to clone and build the entire projects. This change will be introduced and readme updated after the next release of `EventLoop` library  
+
 The app depends on external libraries and headers. The build script is equipped to accept the path to those dependencies in order to build the project. The following steps can be followed to resolve dependencies
 - Clone or download and unzip https://github.com/amoldhamale1105/CustomDataStructures and https://github.com/amoldhamale1105/EventLoop
 - Follow the build instructions under each project readme to generate dependent artifacts
