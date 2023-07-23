@@ -9,7 +9,7 @@ find_library(EVENT_LOOP_LIB EventLoop)
 find_library(CUSTOM_DS_LIB CustomDataStructures)
 
 find_path(CUSTOM_DS_INCLUDES Vector.hpp)
-find_path(EVENT_LOOP_INCLUDES EventLoop.hpp)
+find_path(EVENT_LOOP_INCLUDES EventLoop.h)
 
 include_directories(include)
 

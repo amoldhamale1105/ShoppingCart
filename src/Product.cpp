@@ -1,5 +1,5 @@
 #include "Product.hpp"
-#include <Event.hpp>
+#include <Event.h>
 
 Product::Product() : m_id(0), m_name(""), m_type(ProductType::INVALID), m_price(0), m_stock(0)
 {

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "EnumTypes.h"
-#include <EventLoop.hpp>
+#include <EventLoop.h>
 #include <String.hpp>
 #include <Pair.hpp>
 #include <cstdint>

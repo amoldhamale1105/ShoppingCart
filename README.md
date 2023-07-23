@@ -1,6 +1,6 @@
 # Shopping Cart
 This app is a shopping cart shell for a hypothetical e-commerce platform named `Small Basket`  
-It is developed using custom built data structures (https://github.com/amoldhamale1105/CustomDataStructures) and event loop (https://github.com/amoldhamale1105/EventLoop)     
+It is developed using [custom built data structures](https://github.com/amoldhamale1105/CustomDataStructures) and [event loop library](https://github.com/amoldhamale1105/EventLoop)     
 The shopping cart shell accepts and executes commands for various functions of the shopping application  
 
 ## Build instructions
@@ -8,15 +8,18 @@ The app can be built using the `build.sh` script in the project source tree. It 
 ```
 ./build.sh -h
 ```
-**Note:** The following steps to build are not ideal since the app does not depend on all the headers of *EventLoop* and *CustomDataStructures* projects. A better way to structure the build system would be to download the required headers and libraries in any location without having to clone and build the entire projects. This change will be introduced and readme updated after the next release of `EventLoop` library  
 
 The app depends on external libraries and headers. The build script is equipped to accept the path to those dependencies in order to build the project. The following steps can be followed to resolve dependencies
-- Clone or download and unzip https://github.com/amoldhamale1105/CustomDataStructures and https://github.com/amoldhamale1105/EventLoop
-- Follow the build instructions under each project readme to generate dependent artifacts
-- Run the build script of this project with the `-p` option and argument as comma separated list of paths (absolute or relative) to dependencies. For example, if you clone the above 2 projects at the same level as this project, the build script can be executed as follows with relative paths to the root of dependency projects:
+- Clone or download and unzip [CustomDataStructures](https://github.com/amoldhamale1105/CustomDataStructures) and [build](https://github.com/amoldhamale1105/CustomDataStructures/tree/master#build-instructions) it to generate dependent artifacts
+- Download [latest release](https://github.com/amoldhamale1105/EventLoop/releases) of event loop library and source code archive of that release
+- Create an empty directory in any location with read permissions for current user. Extract `Event.h` and `EventLoop.h` files from the archive and place them in an `include` directory. Move the downloaded library (`.so` file) in a `lib` directory
+- Run the build script of this project with the `-p` option and argument as comma separated list of paths (absolute or relative) to dependencies. 
+
+For example, if the above dependency directories are called `CustomDataStructures` and `EventLoop` respectively, and they located in the same directory as this project, the build script can be executed in current source directory as follows:
 ```
 ./build.sh -p ../EventLoop/,../CustomDataStructures
 ```
+
 Build artifacts will be generated in the `build` directory  
 Output artifact will be present in the `bin` directory as `ShoppingCart` binary
 
@@ -83,6 +86,8 @@ The above commands depict the short-hand version of the original commands. Short
 ![image](https://user-images.githubusercontent.com/78597991/216771652-553531a2-5d24-4dcd-a9c0-a7870fd389fe.png)
 
 ## Contribution
-This project is mainly a dogfooding ambition to prove utility of my custom built data structures and event loop library (links mentioned in the intro above). It also helped me to uncover a few bugs in those dependency projects. This project will also serve as an example for how to use my custom built data structures and event loop in your own projects and to give you an idea of how they work  
+This project is mainly a dogfooding ambition to prove utility of my [custom built data structures](https://github.com/amoldhamale1105/CustomDataStructures) and [event loop library](https://github.com/amoldhamale1105/EventLoop). It also helped me to uncover a few bugs in those dependency projects. This project will also serve as an example for how to use my custom built data structures and event loop in your own projects and to give you an idea of how they work  
+
 With that premise, you can review the code in this repository as well as from the data structures and event loop repo. I am open to improvements in the software as well as the architecture if it offers the expected functionality in a better way. I have tested the app extensively and also run leak checks with `valgrind`. However, often bugs slip through and unoptimized code gets overlooked. Therefore, I would like you to review, test and consequently raise pull requests or create issues if required.  
+
 Please contact me in case of any questions or suggestions amoldhamale1105@gmail.com
