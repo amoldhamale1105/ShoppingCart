@@ -10,14 +10,34 @@ The app can be built using the `build.sh` script in the project source tree. It 
 ```
 
 The app depends on external libraries and headers. The build script is equipped to accept the path to those dependencies in order to build the project. The following steps can be followed to resolve dependencies
-- Clone or download and unzip [CustomDataStructures](https://github.com/amoldhamale1105/CustomDataStructures) and [build](https://github.com/amoldhamale1105/CustomDataStructures/tree/master#build-instructions) it to generate dependent artifacts
-- Download [latest release](https://github.com/amoldhamale1105/EventLoop/releases) of event loop library and source code archive of that release
-- Create an empty directory in any location with read permissions for current user. Extract `Event.h` and `EventLoop.h` files from the archive and place them in an `include` directory. Move the downloaded library (`.so` file) in a `lib` directory
+- The dependency path must contain **include** and **lib** subdirectories for the build script to parse and resolve them correctly  
+- Download release assets of [event loop library](https://github.com/amoldhamale1105/EventLoop/releases) and [custom data structures](https://github.com/amoldhamale1105/CustomDataStructures/releases) and copy required headers and libraries from the assets in respective dependency path subdirectories 
 - Run the build script of this project with the `-p` option and argument as comma separated list of paths (absolute or relative) to dependencies. 
 
-For example, if the above dependency directories are called `CustomDataStructures` and `EventLoop` respectively, and they located in the same directory as this project, the build script can be executed in current source directory as follows:
+For example, we can create a directory called **deps** in the source tree and follow the above steps to create the following tree 
 ```
-./build.sh -p ../EventLoop/,../CustomDataStructures
+deps/  
+├── include  
+│   ├── Event.h  
+│   ├── EventLoop.h  
+│   ├── Graph.hpp  
+│   ├── Hashmap.hpp  
+│   ├── Heap.hpp  
+│   ├── List.hpp  
+│   ├── Pair.hpp  
+│   ├── Queue.hpp  
+│   ├── Stack.hpp  
+│   ├── String.hpp  
+│   ├── Trie.hpp  
+│   └── Vector.hpp  
+└── lib  
+    ├── libCustomDataStructures.so  
+    └── libEventLoop.so
+```
+
+The build script can be executed for the example dependency path setup as follows
+```
+./build.sh -p deps
 ```
 
 Build artifacts will be generated in the `build` directory  
