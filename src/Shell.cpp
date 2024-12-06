@@ -14,7 +14,7 @@ Shell::~Shell()
 {
 }
 
-void Shell::getUserInput(Event *evt)
+void Shell::getUserInput(EventLoop::Event *evt)
 {
     std::cout<<m_userName<<"@SmallBasket:~# ";
     std::cin >> m_input;
@@ -300,7 +300,7 @@ void Shell::getUserInput(Event *evt)
     }
 }
 
-void Shell::cleanup(Event *evt)
+void Shell::cleanup(EventLoop::Event *evt)
 {
     void* payload = evt->getData();
     if (payload != nullptr){

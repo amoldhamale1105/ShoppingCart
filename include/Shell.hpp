@@ -11,8 +11,8 @@ class Shell
     Inventory m_inventory;
     bool m_exitFlag, m_emptyCart;
 
-    void getUserInput(Event* evt);
-    void cleanup(Event* evt);
+    void getUserInput(EventLoop::Event* evt);
+    void cleanup(EventLoop::Event* evt);
     int findProduct(const String& name);
     Product* getProduct(const int& index);
     void usage();

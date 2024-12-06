@@ -13,7 +13,7 @@ class Product
     String m_name;
     ProductType m_type;
 
-    void manageProduct(Event*);
+    void manageProduct(EventLoop::Event*);
 
 public:
     Product();
