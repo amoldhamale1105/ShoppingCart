@@ -18,9 +18,9 @@ public:
     Cart();
     ~Cart();
     
-    void add(Event* evt);
-    void remove(Event* evt);
-    void cartActions(Event* evt);
-    void applyDiscount(Event* evt);
+    void add(EventLoop::Event* evt);
+    void remove(EventLoop::Event* evt);
+    void cartActions(EventLoop::Event* evt);
+    void applyDiscount(EventLoop::Event* evt);
     double getTotal() const;
 };

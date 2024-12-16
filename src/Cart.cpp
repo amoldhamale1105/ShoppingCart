@@ -19,7 +19,7 @@ Cart::~Cart()
     }
 }
 
-void Cart::add(Event *evt)
+void Cart::add(EventLoop::Event *evt)
 {
     Pair<Product*, int>* productInfo = static_cast<Pair<Product*, int>*>(evt->getData());
     uint32_t productID = productInfo->first->getID();
@@ -35,7 +35,7 @@ void Cart::add(Event *evt)
     EventLoop::TriggerEvent("Shop");
 }
 
-void Cart::remove(Event *evt)
+void Cart::remove(EventLoop::Event *evt)
 {
     if (evt->getData() == nullptr){
         if (m_cart.isEmpty())
@@ -83,7 +83,7 @@ void Cart::remove(Event *evt)
     EventLoop::TriggerEvent("RemItem", productInfo);
 }
 
-void Cart::cartActions(Event *evt)
+void Cart::cartActions(EventLoop::Event *evt)
 {
     String evtName = evt->getName().c_str();
 
@@ -154,7 +154,7 @@ void Cart::cartActions(Event *evt)
     }
 }
 
-void Cart::applyDiscount(Event *evt)
+void Cart::applyDiscount(EventLoop::Event *evt)
 {
     String evtName = evt->getName().c_str();
     if (evtName == "Discount"){

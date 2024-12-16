@@ -42,7 +42,7 @@ double Product::getPrice() const
     return m_price;
 }
 
-void Product::manageProduct(Event *evt)
+void Product::manageProduct(EventLoop::Event *evt)
 {
     Pair<Product*, int>* productInfo = static_cast<Pair<Product*, int>*>(evt->getData());
     if (m_name != productInfo->first->getName())
